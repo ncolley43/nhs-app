@@ -9,7 +9,7 @@ const sectionCards = [
 
 test.describe('NHS App home page content (excluding header and footer)', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/nhs-app/');
+    await page.goto('/nhs-app/', { waitUntil: 'domcontentloaded' });
 
     // The cookie banner isn't always shown, so accept it only if it appears
     const acceptCookies = page.getByRole('button', { name: 'Accept analytics cookies' });
