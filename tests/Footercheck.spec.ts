@@ -22,7 +22,7 @@ const footerLinks = [
 ];
 
 test('footer contains every expected link and each link works', async ({ page }) => {
-  await page.goto('/nhs-app/');
+  await page.goto('/nhs-app/', { waitUntil: 'domcontentloaded' });
 
   // The cookie banner isn't always shown, so accept it only if it appears
   const acceptCookies = page.getByRole('button', { name: 'Accept analytics cookies' });

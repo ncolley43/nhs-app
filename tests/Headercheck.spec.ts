@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-test('test', async ({ page }) => {
-  await page.goto('/nhs-app/');
+test('header contains the expected elements and navigation links work', async ({ page }) => {
+  await page.goto('/nhs-app/', { waitUntil: 'domcontentloaded' });
   // The cookie banner isn't always shown, so accept it only if it appears
   const acceptCookies = page.getByRole('button', { name: 'Accept analytics cookies' });
   try {
@@ -44,17 +44,30 @@ test('test', async ({ page }) => {
             - link "Care and support":
               - /url: /social-care-and-support/
     `);
-  await expect(page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('list')).toContainText('Health A to Z');
-  await expect(page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('list')).toContainText('NHS services');
-  await expect(page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('list')).toContainText('Healthy living');
-  await expect(page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('list')).toContainText('Mental health');
-  await expect(page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('list')).toContainText('Care and support');
-  await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Health A to Z' }).click();
-  await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'NHS services' }).click();
-  await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Healthy living' }).dblclick();
-  await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Mental health' }).dblclick();
-  await page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Care and support' }).click();
+  const nav = page.getByRole('navigation', { name: 'Primary navigation' });
+
+  // Header checks on the NHS App page, before navigating away
+  // (other sections such as Care and support use a different header without "My account")
   await expect(page.getByRole('link', { name: 'My account' })).toBeVisible();
   await expect(page.getByRole('combobox', { name: 'Search the NHS website' })).toBeVisible();
-  await page.getByRole('button', { name: 'Search' }).click();
+  await expect(page.getByRole('button', { name: 'Search', exact: true })).toBeVisible();
+
+  // Each primary navigation link goes to the right page
+  const navLinks = [
+    { name: 'Health A to Z', path: '/health-a-to-z/' },
+    { name: 'NHS services', path: '/nhs-services/' },
+    { name: 'Healthy living', path: '/live-well/' },
+    { name: 'Mental health', path: '/mental-health/' },
+    { name: 'Care and support', path: '/social-care-and-support/' },
+  ];
+
+  for (const { name, path } of navLinks) {
+    await test.step(`"${name}" goes to ${path}`, async () => {
+      await expect(nav.getByRole('list')).toContainText(name);
+      await nav.getByRole('link', { name }).click();
+      await expect(page).toHaveURL(new RegExp(`${path}$`));
+      await page.goBack({ waitUntil: 'domcontentloaded' });
+      await expect(page).toHaveURL(/\/nhs-app\/$/);
+    });
+  }
 });
