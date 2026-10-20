@@ -35,18 +35,34 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    /* API tests don't need a browser, so run them once in their own project. */
+    {
+      name: 'api',
+      testMatch: 'api/**/*.spec.ts',
+    },
+
+    /* Accessibility tests run once in Chrome - axe results don't vary by browser. */
+    {
+      name: 'accessibility',
+      testMatch: 'accessibility/**/*.spec.ts',
+      use: { ...devices['Desktop Chrome'] },
+    },
+
     {
       name: 'chromium',
+      testIgnore: ['api/**', 'accessibility/**'],
       use: { ...devices['Desktop Chrome'] },
     },
 
     {
       name: 'firefox',
+      testIgnore: ['api/**', 'accessibility/**'],
       use: { ...devices['Desktop Firefox'] },
     },
 
     {
       name: 'webkit',
+      testIgnore: ['api/**', 'accessibility/**'],
       use: { ...devices['Desktop Safari'] },
     },
 
@@ -63,6 +79,7 @@ export default defineConfig({
     /* Test against branded browsers. */
     {
       name: 'msedge',
+      testIgnore: ['api/**', 'accessibility/**'],
       use: { ...devices['Desktop Edge'], channel: 'msedge' },
     },
     // {
