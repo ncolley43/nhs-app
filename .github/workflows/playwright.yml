@@ -28,6 +28,9 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Install Microsoft Edge
+        run: npx playwright install --with-deps msedge
+
       - name: Run Playwright tests
         run: npm test
 

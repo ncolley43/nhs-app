@@ -14,6 +14,14 @@
   "author": "Nik Colley",
   "type": "commonjs",
   "main": "index.js",
+  "//": [
+    "Terminal commands for the scripts below:",
+    "npm test              - run all tests headless (no browser window)",
+    "npm run test:head     - run all tests with the browser visible",
+    "npm run test:ui       - open Playwright's interactive UI to pick and step through tests",
+    "npm run codegen       - record a new test against https://www.nhs.uk/nhs-app/",
+    "Add Playwright options after --, e.g. npm run test:head -- --project=chromium"
+  ],
   "scripts": {
     "test": "playwright test",
     "test:head": "playwright test --headed",

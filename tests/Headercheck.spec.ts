@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('test', async ({ page }) => {
-  await page.goto('https://www.nhs.uk/nhs-app/');
+  await page.goto('/nhs-app/');
   // The cookie banner isn't always shown, so accept it only if it appears
   const acceptCookies = page.getByRole('button', { name: 'Accept analytics cookies' });
   try {
