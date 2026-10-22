@@ -16,25 +16,28 @@
   "main": "index.js",
   "//": [
     "Terminal commands for the scripts below:",
-    "npm test              - run all tests headless (no browser window)",
+    "npm test              - run all tests headless (no browser window), except the login test",
     "npm run test:head     - run all tests with the browser visible",
     "npm run test:ui       - open Playwright's interactive UI to pick and step through tests",
     "npm run test:api      - run only the API tests (no browser needed)",
     "npm run test:a11y     - run only the accessibility tests (WCAG 2.2 AA scans, keyboard and structure checks)",
+    "npm run test:login    - log in to NHS login with the details in .env (copy .env.example to .env first)",
     "npm run codegen       - record a new test against https://www.nhs.uk/nhs-app/",
     "Add Playwright options after --, e.g. npm run test:head -- --project=chromium"
   ],
   "scripts": {
-    "test": "playwright test",
-    "test:head": "playwright test --headed",
+    "test": "playwright test --grep-invert @login",
+    "test:head": "playwright test --headed --grep-invert @login",
     "test:ui": "playwright test --ui",
     "test:api": "playwright test --project=api",
     "test:a11y": "playwright test --project=accessibility",
+    "test:login": "playwright test --project=login --headed",
     "codegen": "playwright codegen https://www.nhs.uk/nhs-app/"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.64.1",
-    "@types/node": "^26.6.5"
+    "@types/node": "^26.6.5",
+    "dotenv": "^18.0.8"
   }
 }

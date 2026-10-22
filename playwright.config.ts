@@ -4,9 +4,9 @@ import { defineConfig, devices } from '@playwright/test';
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+import dotenv from 'dotenv';
+import path from 'path';
+dotenv.config({ path: path.resolve(__dirname, '.env'), quiet: true });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -48,21 +48,29 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
+    /* Login tests use a real NHS login account, so run once in Chrome only - see tests/login/. */
+    {
+      name: 'login',
+      testMatch: 'login/**/*.spec.ts',
+      /* Traces, screenshots and videos would capture the email and password, so keep them off. */
+      use: { ...devices['Desktop Chrome'], trace: 'off', screenshot: 'off', video: 'off' },
+    },
+
     {
       name: 'chromium',
-      testIgnore: ['api/**', 'accessibility/**'],
+      testIgnore: ['api/**', 'accessibility/**', 'login/**'],
       use: { ...devices['Desktop Chrome'] },
     },
 
     {
       name: 'firefox',
-      testIgnore: ['api/**', 'accessibility/**'],
+      testIgnore: ['api/**', 'accessibility/**', 'login/**'],
       use: { ...devices['Desktop Firefox'] },
     },
 
     {
       name: 'webkit',
-      testIgnore: ['api/**', 'accessibility/**'],
+      testIgnore: ['api/**', 'accessibility/**', 'login/**'],
       use: { ...devices['Desktop Safari'] },
     },
 
@@ -79,7 +87,7 @@ export default defineConfig({
     /* Test against branded browsers. */
     {
       name: 'msedge',
-      testIgnore: ['api/**', 'accessibility/**'],
+      testIgnore: ['api/**', 'accessibility/**', 'login/**'],
       use: { ...devices['Desktop Edge'], channel: 'msedge' },
     },
     // {
