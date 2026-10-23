@@ -41,3 +41,11 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+      - name: Upload API request/response log
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: api-log
+          path: api-results/api-log.json
+          retention-days: 30
