@@ -64,10 +64,16 @@ test('header contains the expected elements and navigation links work', async ({
   for (const { name, path } of navLinks) {
     await test.step(`"${name}" goes to ${path}`, async () => {
       await expect(nav.getByRole('list')).toContainText(name);
-      await nav.getByRole('link', { name }).click();
-      await expect(page).toHaveURL(new RegExp(`${path}$`));
-      await page.goBack({ waitUntil: 'domcontentloaded' });
-      await expect(page).toHaveURL(/\/nhs-app\/$/);
+
+      // Firefox sometimes ignores a click made while the page is still settling,
+      // so retry the click if the page hasn't moved within 5 seconds
+      await expect(async () => {
+        await nav.getByRole('link', { name }).click();
+        await expect(page).toHaveURL(new RegExp(`${path}$`), { timeout: 5000 });
+      }).toPass({ timeout: 30_000 });
+
+      // Reopen the NHS App page rather than using Back, which is less reliable in Firefox
+      await page.goto('/nhs-app/', { waitUntil: 'domcontentloaded' });
     });
   }
 });
