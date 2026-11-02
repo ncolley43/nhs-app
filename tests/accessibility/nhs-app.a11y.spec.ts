@@ -50,14 +50,14 @@ async function checkAccessibility(page: Page, testInfo: TestInfo, label: string)
 test.describe('Automated WCAG 2.2 AA scans', () => {
   for (const { name, path } of pages) {
     test(`${name} page has no serious accessibility issues`, async ({ page }, testInfo) => {
-      await page.goto(path);
+      await page.goto(path, { waitUntil: 'domcontentloaded' });
       await acceptCookiesIfShown(page);
       await checkAccessibility(page, testInfo, name);
     });
   }
 
   test('cookie banner has no serious accessibility issues', async ({ page }, testInfo) => {
-    await page.goto('/nhs-app/');
+    await page.goto('/nhs-app/', { waitUntil: 'domcontentloaded' });
     const banner = page.getByRole('button', { name: 'Accept analytics cookies' });
     test.skip(!(await banner.isVisible({ timeout: 5000 }).catch(() => false)), 'Cookie banner not displayed');
 
@@ -68,7 +68,7 @@ test.describe('Automated WCAG 2.2 AA scans', () => {
     test.use({ viewport: { width: 375, height: 667 }, isMobile: true, hasTouch: true });
 
     test('NHS App home page has no serious accessibility issues', async ({ page }, testInfo) => {
-      await page.goto('/nhs-app/');
+      await page.goto('/nhs-app/', { waitUntil: 'domcontentloaded' });
       await acceptCookiesIfShown(page);
       await checkAccessibility(page, testInfo, 'NHS App home (mobile)');
     });
@@ -77,9 +77,9 @@ test.describe('Automated WCAG 2.2 AA scans', () => {
 
 test.describe('Keyboard access', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/nhs-app/');
+    await page.goto('/nhs-app/', { waitUntil: 'domcontentloaded' });
     await acceptCookiesIfShown(page);
-    await page.reload();
+    await page.reload({ waitUntil: 'domcontentloaded' });
   });
 
   test('"Skip to main content" is the first link and moves focus to the main content', async ({ page }) => {
@@ -152,7 +152,7 @@ test.describe('Keyboard access', () => {
     // Fresh context with no cookies so the banner shows
     const context = await browser.newContext();
     const page = await context.newPage();
-    await page.goto('/nhs-app/');
+    await page.goto('/nhs-app/', { waitUntil: 'domcontentloaded' });
 
     const accept = page.getByRole('button', { name: 'Accept analytics cookies' });
     test.skip(!(await accept.isVisible({ timeout: 5000 }).catch(() => false)), 'Cookie banner not displayed');
@@ -172,7 +172,7 @@ test.describe('Keyboard access', () => {
 
 test.describe('Page structure', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/nhs-app/');
+    await page.goto('/nhs-app/', { waitUntil: 'domcontentloaded' });
     await acceptCookiesIfShown(page);
   });
 
