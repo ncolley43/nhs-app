@@ -1,6 +1,6 @@
 // Plan: specs/nhs-app-basic.plan.md - section 2
 import { test, expect, Page } from '@playwright/test';
-import { openNhsApp } from './helpers';
+import { openNhsApp, COOKIE_BANNER_TIMEOUT } from './helpers';
 
 // Read the consent choice the site stores in the nhsuk-cookie-consent cookie
 async function consentCookie(page: Page) {
@@ -14,7 +14,7 @@ test.describe('NHS App cookie banner', () => {
 
     // The banner isn't always shown - skip rather than fail if it's missing
     const shown = await page.getByRole('heading', { name: 'Cookies on the NHS website' })
-      .waitFor({ timeout: 5000 }).then(() => true, () => false);
+      .waitFor({ timeout: COOKIE_BANNER_TIMEOUT }).then(() => true, () => false);
     test.skip(!shown, 'Cookie banner not displayed');
   });
 
