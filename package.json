@@ -17,6 +17,7 @@
   "//": [
     "Terminal commands for the scripts below:",
     "npm test              - run all tests headless (no browser window), except the login test",
+    "npm run test:master   - ad hoc run of every test (except login) from the latest master on GitHub, headless; asks at the end whether to open the report",
     "npm run test:head     - run all tests with the browser visible",
     "npm run test:ui       - open Playwright's interactive UI to pick and step through tests",
     "npm run test:api      - run only the API tests (no browser needed)",
@@ -29,6 +30,7 @@
   ],
   "scripts": {
     "test": "playwright test --grep-invert @login",
+    "test:master": "node scripts/run-master.js",
     "test:head": "playwright test --headed --grep-invert @login",
     "test:ui": "playwright test --ui",
     "test:api": "playwright test --project=api",
