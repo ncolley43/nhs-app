@@ -69,7 +69,11 @@ export default defineConfig({
     {
       name: 'firefox',
       testIgnore: ['api/**', 'accessibility/**', 'login/**'],
-      use: { ...devices['Desktop Firefox'] },
+      /* Firefox is slower on nhs.uk and can stall while the site's analytics scripts run,
+         so give it longer limits than the other browsers. */
+      timeout: 90_000,
+      expect: { timeout: 15_000 },
+      use: { ...devices['Desktop Firefox'], navigationTimeout: 45_000, actionTimeout: 20_000 },
     },
 
     {

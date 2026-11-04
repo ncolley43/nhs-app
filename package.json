@@ -21,6 +21,8 @@
     "npm run test:ui       - open Playwright's interactive UI to pick and step through tests",
     "npm run test:api      - run only the API tests (no browser needed)",
     "npm run test:a11y     - run only the accessibility tests (WCAG 2.2 AA scans, keyboard and structure checks)",
+    "npm run test:visual   - check the NHS App home page layout matches the last passing run (updates the baseline on a pass)",
+    "npm run test:visual:reset - throw away the saved screenshot and take a fresh baseline",
     "npm run test:login    - log in to NHS login with the details in .env (copy .env.example to .env first)",
     "npm run codegen       - record a new test against https://www.nhs.uk/nhs-app/",
     "Add Playwright options after --, e.g. npm run test:head -- --project=chromium"
@@ -31,6 +33,8 @@
     "test:ui": "playwright test --ui",
     "test:api": "playwright test --project=api",
     "test:a11y": "playwright test --project=accessibility",
+    "test:visual": "playwright test --project=visual",
+    "test:visual:reset": "playwright test --project=visual --update-snapshots",
     "test:login": "playwright test --project=login --headed",
     "codegen": "playwright codegen https://www.nhs.uk/nhs-app/"
   },
